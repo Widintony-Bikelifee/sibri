@@ -1,0 +1,22 @@
+# Blueprint de Render para SIBRI (Colectivos Ciudad de Ipiales S.A.)
+# Despliega el Background Worker continuo que calcula el movimiento centralizado de buses.
+
+services:
+  - type: worker
+    name: sibri-bus-movement-worker
+    runtime: node
+    region: oregon # o la región más cercana a Colombia
+    plan: starter # Los Background Workers en Render requieren al menos plan Starter para ejecución 24/7 continua
+    rootDir: worker
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: UPDATE_INTERVAL_MS
+        value: "2500"
+      - key: FIREBASE_PROJECT_ID
+        value: sibri-523ab
+      - key: FIREBASE_SERVICE_ACCOUNT_KEY
+        sync: false # Configurar en el Dashboard de Render pegando el contenido del archivo JSON de la cuenta de servicio de Firebase
